@@ -75,7 +75,7 @@ The MVP is done when the system can orchestrate a web app workflow, and the cont
 1. create a run from a web app goal
 2. split work into tasks
 3. debate implementation options before coding
-4. build and test a web app
+4. build and test the implementation behind a web app
 5. resume after a failure or bug report
 6. apply approvals from config
 7. swap the execution backend through an adapter
