@@ -67,6 +67,7 @@ This system helps you orchestrate the work needed to build a web app:
 - `docs/testing.md`
 - `docs/decision-log.md`
 - `docs/roadmap.md`
+- `docs/automation.md`
 
 ## Automation
 
