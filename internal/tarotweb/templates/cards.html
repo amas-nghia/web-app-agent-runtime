@@ -1,0 +1,21 @@
+{{define "cards"}}{{template "base" .}}{{end}}
+{{define "content"}}
+<section class="reading-header">
+  <div>
+    <p class="eyebrow">Deck</p>
+    <h1>The full tarot library</h1>
+    <p class="lede">78 seeded cards, split across Major and Minor Arcana.</p>
+  </div>
+  <a class="back-link" href="/">Home</a>
+</section>
+
+<section class="panel-grid cards-grid">
+  {{range .Cards}}
+  <article class="card compact">
+    <span>{{.Arcana}}</span>
+    <h2>{{.Name}}</h2>
+    <p>{{.Meaning}}</p>
+  </article>
+  {{end}}
+</section>
+{{end}}

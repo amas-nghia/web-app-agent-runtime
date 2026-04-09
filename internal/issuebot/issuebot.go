@@ -140,6 +140,7 @@ const (
 	issueKindUnknown  issueKind = ""
 	issueKindDocs     issueKind = "docs"
 	issueKindOpencode issueKind = "opencode"
+	issueKindBotDocs  issueKind = "bot_docs"
 )
 
 func classify(issue Issue) issueKind {
@@ -149,6 +150,8 @@ func classify(issue Issue) issueKind {
 		return issueKindDocs
 	case containsAny(t, []string{"opencode adapter", "interactive invocation", "hang", "timeout", "non-interactive"}):
 		return issueKindOpencode
+	case containsAny(t, []string{"issue bot", "automation", "schedule", "15-minute", "cron", "config"}):
+		return issueKindBotDocs
 	default:
 		return issueKindUnknown
 	}
@@ -180,6 +183,9 @@ func applyFix(ctx context.Context, root string, issue Issue, kind issueKind) (ch
 	case issueKindOpencode:
 		changed, err = fixOpenCodeAdapter(root)
 		return changed, "opencode-timeout", err
+	case issueKindBotDocs:
+		changed, err = fixBotDocs(root)
+		return changed, "issuebot-docs", err
 	default:
 		return false, "", nil
 	}
@@ -201,7 +207,7 @@ func commitAndPush(ctx context.Context, root, branch string, issue Issue, note s
 	if err := runGit(ctx, root, "checkout", "-B", branch); err != nil {
 		return err
 	}
-	if err := runGit(ctx, root, "add", "README.md", "docs/contracts.md", "internal/adapters/opencode/opencode.go", "internal/adapters/opencode/opencode_test.go", "docs/checklist.md", "docs/decision-log.md"); err != nil {
+	if err := runGit(ctx, root, "add", "README.md", "docs/contracts.md", "docs/automation.md", "internal/adapters/opencode/opencode.go", "internal/adapters/opencode/opencode_test.go", "docs/checklist.md", "docs/decision-log.md"); err != nil {
 		return err
 	}
 	if err := runGit(ctx, root, "commit", "-m", msg); err != nil {

@@ -1,0 +1,23 @@
+{{define "reading"}}{{template "base" .}}{{end}}
+{{define "content"}}
+<section class="reading-header">
+  <div>
+    <p class="eyebrow">{{.Spread}}</p>
+    <h1>{{.Question}}</h1>
+    <p class="lede">{{.Summary}}</p>
+  </div>
+  <a class="back-link" href="/">New reading</a>
+</section>
+
+<section class="spread">
+  {{range .Cards}}
+  <article class="spread-card {{if .Reversed}}reversed{{end}}">
+    <p class="position">{{.Position}}</p>
+    <h2>{{.Card.Name}}</h2>
+    <p class="meta">{{.Card.Arcana}}{{if .Card.Suit}} • {{.Card.Suit}}{{end}}</p>
+    <p>{{.Insight}}</p>
+    {{if .Reversed}}<span class="pill">Reversed</span>{{else}}<span class="pill">Upright</span>{{end}}
+  </article>
+  {{end}}
+</section>
+{{end}}

@@ -76,3 +76,39 @@ func fixOpenCodeAdapter(root string) (bool, error) {
 	}
 	return true, nil
 }
+
+func fixBotDocs(root string) (bool, error) {
+	changed := false
+	path := filepath.Join(root, "docs", "automation.md")
+	content := "# Automation\n\n## Issue bot\n\nThe issue bot runs on a 15-minute schedule in GitHub Actions (`.github/workflows/issuebot.yml`).\nIt checks open issues, auto-fixes only recognized safe patterns, runs tests, and closes issues after a successful fix.\n\n### Configuration\n\n- `--repo-root`: repository root\n- `--label`: optional issue label filter\n- `--once`: run a single cycle and exit\n- `--dry-run`: apply fixes but do not commit/push\n- `--interval`: polling interval (default 15m)\n- `--max-issues`: maximum issues to inspect\n- `--auto-close`: close the issue after a successful fix\n\n### Safety\n\nThe bot only auto-fixes recognized issue patterns. Unknown issues are skipped.\n\n### Workflow\n\n1. list open issues\n2. classify known safe patterns\n3. apply a targeted fix\n4. run `go test ./...`\n5. commit/push the change\n6. comment and close the issue\n"
+	if _, err := os.Stat(path); os.IsNotExist(err) {
+		if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
+			return false, fmt.Errorf("mkdir automation docs: %w", err)
+		}
+		if err := os.WriteFile(path, []byte(content), 0o644); err != nil {
+			return false, fmt.Errorf("write automation docs: %w", err)
+		}
+		changed = true
+	}
+
+	readmePath := filepath.Join(root, "README.md")
+	readme, err := os.ReadFile(readmePath)
+	if err != nil {
+		return changed, fmt.Errorf("read README: %w", err)
+	}
+	updated := string(readme)
+	if !strings.Contains(updated, "docs/automation.md") {
+		updated = strings.Replace(updated, "- `docs/roadmap.md`\n", "- `docs/roadmap.md`\n- `docs/automation.md`\n", 1)
+		changed = true
+	}
+	if !strings.Contains(updated, "## Automation") {
+		updated += "\n## Automation\n\nAn issue bot runs on a 15-minute schedule in GitHub Actions (`.github/workflows/issuebot.yml`).\nIt checks open issues, auto-fixes only recognized safe patterns, runs tests, and closes issues after a successful fix.\n"
+		changed = true
+	}
+	if changed {
+		if err := os.WriteFile(readmePath, []byte(updated), 0o644); err != nil {
+			return false, fmt.Errorf("write README: %w", err)
+		}
+	}
+	return changed, nil
+}

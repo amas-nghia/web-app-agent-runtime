@@ -1,0 +1,27 @@
+{{define "home"}}{{template "base" .}}{{end}}
+{{define "content"}}
+<section class="hero">
+  <div>
+    <p class="eyebrow">Moonlight Tarot</p>
+    <h1>Read the cards. Build the story.</h1>
+    <p class="lede">A polished tarot reading app with a real HTTP backend, seeded deck, and cinematic UI.</p>
+  </div>
+  <form class="reading-form" method="post" action="/read">
+    <label for="question">Your question</label>
+    <textarea id="question" name="question" rows="4" placeholder="What should I focus on this month?"></textarea>
+    <button type="submit">Draw a spread</button>
+  </form>
+</section>
+
+<section class="panel-grid">
+  {{range .Cards}}
+  <article class="card">
+    <span>{{.Arcana}}</span>
+    <h2>{{.Name}}</h2>
+    <p>{{.Meaning}}</p>
+  </article>
+  {{end}}
+</section>
+
+<footer class="footer">{{.Message}} • {{.Year}}</footer>
+{{end}}
