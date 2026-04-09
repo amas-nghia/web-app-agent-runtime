@@ -1,5 +1,7 @@
 # Web App Agent Runtime
 
+License: MIT
+
 Runtime for building and maintaining web apps for mobile and desktop.
 
 ## Goal

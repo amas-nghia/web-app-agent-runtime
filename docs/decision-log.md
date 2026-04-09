@@ -2,6 +2,7 @@
 
 ## Locked decisions
 
+- MIT license
 - web-app-only scope for MVP
 - engine-agnostic architecture
 - OpenCode as first adapter
