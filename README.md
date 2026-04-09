@@ -68,6 +68,11 @@ This system helps you orchestrate the work needed to build a web app:
 - `docs/decision-log.md`
 - `docs/roadmap.md`
 
+## Automation
+
+An issue bot runs on a 15-minute schedule in GitHub Actions (`.github/workflows/issuebot.yml`).
+It checks open issues, auto-fixes only recognized safe patterns, runs tests, and closes issues after a successful fix.
+
 ## MVP definition
 
 The MVP is done when the system can orchestrate a web app workflow, and the control-flow path is verifiable with the mock adapter:
