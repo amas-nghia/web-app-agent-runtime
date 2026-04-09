@@ -24,8 +24,8 @@ func TestExecuteTask(t *testing.T) {
 		{
 			name: "success writes stdout and stderr from PATH executable",
 			script: `#!/bin/sh
-printf 'stdout:%s\n' "$2"
-printf 'stderr:%s\n' "$2" >&2
+printf 'stdout:%s\n' "$3"
+printf 'stderr:%s\n' "$3" >&2
 exit 0
 `,
 			wantSummary: []string{"stdout:draft the plan", "stderr:draft the plan"},
@@ -33,8 +33,8 @@ exit 0
 		{
 			name: "failure returns wrapped exit error and preserves output",
 			script: `#!/bin/sh
-printf 'stdout:%s\n' "$2"
-printf 'stderr:%s\n' "$2" >&2
+printf 'stdout:%s\n' "$3"
+printf 'stderr:%s\n' "$3" >&2
 exit 7
 `,
 			wantErr:     "exit status 7",

@@ -1,10 +1,13 @@
 package opencode
 
 import (
+	"context"
 	"errors"
 	"fmt"
+	"os"
 	"os/exec"
 	"strings"
+	"time"
 
 	"web-app-agent-runtime/internal/state"
 )
@@ -29,7 +32,12 @@ func (a *Adapter) StartRun(spec state.RunSpec) (string, error) {
 }
 
 func (a *Adapter) ExecuteTask(task state.TaskSpec) (state.ExecutionResult, error) {
-	cmd := exec.Command("opencode", "run", task.Prompt)
+	ctx, cancel := context.WithTimeout(context.Background(), opencodeTimeout())
+	defer cancel()
+
+	cmd := exec.CommandContext(ctx, "opencode", "run", "--non-interactive", task.Prompt)
+	cmd.Stdin = strings.NewReader("")
+	cmd.Env = append(os.Environ(), "OPENCODE_NON_INTERACTIVE=1")
 	output, err := cmd.CombinedOutput()
 	result := state.ExecutionResult{
 		RunID:        task.RunID,
@@ -48,9 +56,24 @@ func (a *Adapter) ExecuteTask(task state.TaskSpec) (state.ExecutionResult, error
 	}
 	if err != nil {
 		result.Error = err.Error()
+		if ctx.Err() == context.DeadlineExceeded {
+			return result, fmt.Errorf("opencode adapter execute task: timeout after %s: %w", opencodeTimeout(), err)
+		}
 		return result, fmt.Errorf("opencode adapter execute task: %w", err)
 	}
 	return result, nil
+}
+
+func opencodeTimeout() time.Duration {
+	raw := strings.TrimSpace(os.Getenv("WABR_OPENCODE_TIMEOUT"))
+	if raw == "" {
+		return 2 * time.Minute
+	}
+	d, err := time.ParseDuration(raw)
+	if err != nil || d <= 0 {
+		return 2 * time.Minute
+	}
+	return d
 }
 func (a *Adapter) RequestApproval(req state.ApprovalRequest) (state.ApprovalDecision, error) {
 	approved := req.Tier != state.ApprovalBlock

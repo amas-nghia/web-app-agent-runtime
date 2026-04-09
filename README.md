@@ -136,6 +136,34 @@ Useful artifacts:
 Replay uses the canonical run record plus the saved progress checkpoint; `resume` continues the current run id from its checkpoint/start step, while `replay` creates a new replay run by default.
 The `status` command prints a compact progress summary and the last history event instead of raw slices.
 
+## Output contract
+
+The mock smoke path is a control-flow check, not a full app generator.
+
+After a successful mock run, the durable outputs are:
+
+- `runs/current`
+- `runs/<run-id>/progress.json`
+- `runs/<run-id>/history.jsonl`
+- `runs/<run-id>/debates/<step>.json`
+
+The mock path also records placeholder artifact refs such as `mock-artifact` or `release task-artifact`.
+
+### Tarot demo example
+
+Input goal:
+
+```text
+build a beautiful MVC tarot reading web app with frontend, backend, and complete seed data
+```
+
+Expected result on the mock smoke path:
+
+- the run completes successfully
+- workflow metadata is persisted
+- placeholder artifacts are written
+- no runnable tarot app is produced until a real backend adapter is wired
+
 ## Current runtime path
 
 - CLI `run` command is the first executable path.
