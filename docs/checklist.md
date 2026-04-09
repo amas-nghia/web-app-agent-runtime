@@ -65,3 +65,4 @@ Use this file to track what is done, what failed, what was chosen, and how it wa
 
 - Update this file before and after every meaningful change.
 - When a task fails, record the failure reason, decision, and fix in the table.
+- The default quick start is a mock-backed smoke test, not a real app generator.

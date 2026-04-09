@@ -2,16 +2,28 @@
 
 License: MIT
 
-Runtime for building and maintaining web apps for mobile and desktop.
+Runtime/orchestrator skeleton for building and maintaining web apps for mobile and desktop.
+
+## What this is
+
+- a workflow runtime that coordinates tasks, approvals, artifacts, and retries
+- a backend-agnostic skeleton that starts with a mock adapter
+- a testable control plane for web app work
+
+## What this is not
+
+- not a full web app generator end-to-end out of the box
+- not a finished product that emits a production app on the mock path
+- not a replacement for a real frontend/backend implementation
 
 ## Goal
 
-This system helps you:
+This system helps you orchestrate the work needed to build a web app:
 
 - intake a web app idea
 - split it into tasks automatically
 - debate implementation choices before coding
-- build and test the app
+- build and test the implementation behind a web app
 - fix bugs after release
 - keep approval policy configurable
 - remain engine-agnostic from day one
@@ -58,7 +70,7 @@ This system helps you:
 
 ## MVP definition
 
-The MVP is done when the system can:
+The MVP is done when the system can orchestrate a web app workflow, and the control-flow path is verifiable with the mock adapter:
 
 1. create a run from a web app goal
 2. split work into tasks
@@ -70,7 +82,7 @@ The MVP is done when the system can:
 
 ## Quick start
 
-Run the mock-backed smoke flow:
+Run the mock-backed smoke flow. This verifies the orchestration path only; it does not generate a real app:
 
 ```bash
 GOTOOLCHAIN=local go run ./cmd/orchestrator run "build a responsive web app"
@@ -83,6 +95,8 @@ GOTOOLCHAIN=local go run ./cmd/orchestrator run --state ./runs/state.db "build a
 ```
 
 The default backend is `mock`, so early testing stays deterministic.
+
+If you want to generate a real app, you must wire a real backend adapter and sandbox first.
 
 Use `bugfix` when you already have a reported defect and want the run to start in the bugfix path instead of a fresh intake. It requires `--bug-report`:
 
@@ -129,6 +143,8 @@ The `status` command prints a compact progress summary and the last history even
 - Mock adapter is the default adapter for fast verification.
 - OpenCode adapter is present as the first swappable backend stub.
 - `status` reads the current run, progress, and canonical state summary.
+
+The default smoke path is intentionally non-production and should be read as a control-flow test, not a real app build.
 
 ## Replay flow
 

@@ -6,6 +6,7 @@
 - web-app-only scope for MVP
 - engine-agnostic architecture
 - OpenCode as first adapter
+- current quick start is a mock-backed smoke test, not a real app generator
 - PostgreSQL as canonical state store
 - one worktree per run
 - container-first sandboxing
